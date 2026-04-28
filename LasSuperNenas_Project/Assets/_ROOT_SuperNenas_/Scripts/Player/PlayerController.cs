@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class PlayerController : MonoBehaviour
     public LayerMask capaEnemigos;
     public GameObject efectoImpacto;
 
+    private Vector2 inputMovimiento;
+    private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
     private Camera camara;
 
@@ -27,26 +30,34 @@ public class PlayerController : MonoBehaviour
         if (GameManager.Instance.isGameOver) return;
 
         MoverLateral();
-        ManejarDisparo();
-    }
 
-    void MoverLateral()
-    {
-        float input = Input.GetAxis("Horizontal");
-        Vector3 movimiento = new Vector3(input * velocidadLateral * Time.deltaTime, 0f, 0f);
-        transform.Translate(movimiento);
-
-        float x = Mathf.Clamp(transform.position.x, -limiteX, limiteX);
-        transform.position = new Vector3(x, transform.position.y, transform.position.z);
-    }
-
-    void ManejarDisparo()
-    {
-        if (Input.GetButton("Fire1") && Time.time >= tiempoProximoDisparo)
+        if (estaDisparando && Time.time >= tiempoProximoDisparo)
         {
             tiempoProximoDisparo = Time.time + cadenciaDisparo;
             Disparar();
         }
+    }
+
+    // Conecta este método al evento Move en el Player Input
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        inputMovimiento = context.ReadValue<Vector2>();
+    }
+
+    // Conecta este método al evento Fire en el Player Input
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.started) estaDisparando = true;
+        if (context.canceled) estaDisparando = false;
+    }
+
+    void MoverLateral()
+    {
+        Vector3 movimiento = new Vector3(inputMovimiento.x * velocidadLateral * Time.deltaTime, 0f, 0f);
+        transform.Translate(movimiento);
+
+        float x = Mathf.Clamp(transform.position.x, -limiteX, limiteX);
+        transform.position = new Vector3(x, transform.position.y, transform.position.z);
     }
 
     void Disparar()
