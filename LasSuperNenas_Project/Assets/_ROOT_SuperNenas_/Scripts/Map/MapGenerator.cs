@@ -33,8 +33,7 @@ public class MapGenerator : MonoBehaviour
 
     void GenerarChunk()
     {
-        float offsetX = Random.Range(-3f, 3f);
-        Vector3 posicion = new Vector3(offsetX, 0f, zUltimoChunk);
+        Vector3 posicion = new Vector3(0f, 0f, zUltimoChunk);
 
         GameObject nuevoChunk = Instantiate(chunkPrefab, posicion, Quaternion.identity);
         chunksActivos.Enqueue(nuevoChunk);
