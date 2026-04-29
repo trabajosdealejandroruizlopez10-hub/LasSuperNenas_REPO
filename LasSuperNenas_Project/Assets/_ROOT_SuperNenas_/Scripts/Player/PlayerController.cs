@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
     public float velocidadLateral = 4f;
     public float limiteX = 4f;
 
+    [Header("Salto")]
+    public float fuerzaSalto = 5f;
+
     [Header("Disparo")]
     public float alcanceDisparo = 50f;
     public float cadenciaDisparo = 0.2f;
@@ -16,11 +19,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 inputMovimiento;
     private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
+    private bool estaEnSuelo = false;
     private Camera camara;
+    private Rigidbody rb;
 
     void Start()
     {
         camara = Camera.main;
+        rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -38,13 +44,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Conecta este método al evento Move en el Player Input
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Suelo"))
+            estaEnSuelo = true;
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Suelo"))
+            estaEnSuelo = false;
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         inputMovimiento = context.ReadValue<Vector2>();
     }
 
-    // Conecta este método al evento Fire en el Player Input
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.started && estaEnSuelo)
+            rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+    }
+
     public void OnFire(InputAction.CallbackContext context)
     {
         if (context.started) estaDisparando = true;

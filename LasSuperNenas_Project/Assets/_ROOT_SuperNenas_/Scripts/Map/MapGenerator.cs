@@ -22,6 +22,8 @@ public class MapGenerator : MonoBehaviour
 
     void Update()
     {
+        if (jugador == null) return;
+
         if (jugador.position.z + (chunksVisibles * chunkLongitud) > zUltimoChunk)
         {
             GenerarChunk();
