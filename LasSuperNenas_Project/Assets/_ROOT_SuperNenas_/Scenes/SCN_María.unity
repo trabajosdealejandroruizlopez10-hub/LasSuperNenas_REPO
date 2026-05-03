@@ -2052,6 +2052,63 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1574.7731}
   m_Center: {x: 0, y: 0, z: 726.7968}
+--- !u!1001 &748741515
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 38.68592
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.058693886
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -250.66241
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6988643
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.0012303919
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.71525216
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0012592438
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0.005
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -91.328
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0.202
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
+      propertyPath: m_Name
+      value: Gas_station
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 50d99b8cd4d7dec4699fd0ee87ba4611, type: 3}
 --- !u!1 &775568939
 GameObject:
   m_ObjectHideFlags: 0
@@ -6198,3 +6255,4 @@ SceneRoots:
   - {fileID: 1117854157}
   - {fileID: 904030267}
   - {fileID: 1449752742}
+  - {fileID: 748741515}

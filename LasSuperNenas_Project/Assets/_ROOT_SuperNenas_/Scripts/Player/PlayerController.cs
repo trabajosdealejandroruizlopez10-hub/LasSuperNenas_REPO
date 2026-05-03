@@ -3,9 +3,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movimiento hacia delante")]
-    public float velocidadHaciaDelante = 5f;
-
     [Header("Movimiento lateral")]
     public float velocidadLateral = 4f;
     public float limiteX = 4f;
@@ -23,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
     private bool estaEnSuelo = false;
+
     private Camera camara;
     private Rigidbody rb;
 
@@ -30,15 +28,16 @@ public class PlayerController : MonoBehaviour
     {
         camara = Camera.main;
         rb = GetComponent<Rigidbody>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        if (GameManager.Instance.isGameOver) return;
+        if (GameManager.Instance == null || GameManager.Instance.isGameOver) return;
 
-        MoverLateral();
+        Mover();
 
         if (estaDisparando && Time.time >= tiempoProximoDisparo)
         {
@@ -59,7 +58,6 @@ public class PlayerController : MonoBehaviour
             estaEnSuelo = false;
     }
 
-
     public void OnMove(InputAction.CallbackContext context)
     {
         inputMovimiento = context.ReadValue<Vector2>();
@@ -68,7 +66,9 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.started && estaEnSuelo)
+        {
             rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+        }
     }
 
     public void OnFire(InputAction.CallbackContext context)
@@ -77,11 +77,11 @@ public class PlayerController : MonoBehaviour
         if (context.canceled) estaDisparando = false;
     }
 
-
-    void MoverLateral()
+    void Mover()
     {
-        float velocidadActual = GameManager.Instance.GetCurrentSpeed();
-        transform.Translate(Vector3.forward * velocidadActual * Time.deltaTime);
+        float velocidad = GameManager.Instance.GetCurrentSpeed();
+
+        transform.Translate(Vector3.forward * velocidad * Time.deltaTime);
 
         Vector3 movimiento = new Vector3(inputMovimiento.x * velocidadLateral * Time.deltaTime, 0f, 0f);
         transform.Translate(movimiento);
@@ -98,11 +98,16 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(rayo, out impacto, alcanceDisparo, capaEnemigos))
         {
             EnemyHealth enemigo = impacto.collider.GetComponent<EnemyHealth>();
+
             if (enemigo != null)
-                enemigo.RecibirDaño(1);
+            {
+                enemigo.TakeDamage(1);
+            }
 
             if (efectoImpacto != null)
+            {
                 Instantiate(efectoImpacto, impacto.point, Quaternion.identity);
+            }
         }
     }
 }

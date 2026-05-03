@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 8212501834260457847}
   - component: {fileID: 2255858182492522655}
   - component: {fileID: -4561370165881425707}
+  - component: {fileID: -7912238885661310700}
+  - component: {fileID: 1389104536680064234}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -141,3 +143,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-7912238885661310700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8391766778023825910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e8862c66b2f24448ee46f90f2e9420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  velocidad: 3
+  "da\xF1oAlJugador": 1
+  distanciaAtaque: 1.5
+--- !u!114 &1389104536680064234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8391766778023825910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cabe9d905173c2498e8a8ea0da0c948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  health: 2
+  healthPickupPrefab: {fileID: 0}
