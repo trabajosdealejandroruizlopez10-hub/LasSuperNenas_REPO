@@ -16,15 +16,25 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        // Singleton simple (sin persistencia entre escenas)
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    void Start()
+    {
+        // Reset estado al iniciar escena
+        isGameOver = false;
+        metersRun = 0f;
+        playerHealth = 5;
+
+        Time.timeScale = 1f;
     }
 
     void Update()
@@ -64,6 +74,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
+
         Debug.Log("GAME OVER - Metros: " + Mathf.FloorToInt(metersRun));
 
         if (UIManager.Instance != null)
@@ -77,6 +88,7 @@ public class GameManager : MonoBehaviour
     public void WinGame()
     {
         isGameOver = true;
+
         Debug.Log("YOU WIN");
 
         if (UIManager.Instance != null)

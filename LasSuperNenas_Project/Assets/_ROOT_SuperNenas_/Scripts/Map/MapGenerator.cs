@@ -37,6 +37,7 @@ public class MapGenerator : MonoBehaviour
 
         GameObject nuevoChunk = Instantiate(chunkPrefab, posicion, Quaternion.identity);
         chunksActivos.Enqueue(nuevoChunk);
+
         zUltimoChunk += chunkLongitud;
     }
 

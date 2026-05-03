@@ -5,11 +5,11 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movimiento lateral")]
-    public float velocidadLateral = 4f;
-    public float limiteX = 4f;
+    public float velocidadLateral = 10f;
+    public float limiteX = 8f;
 
-    [Header("Salto")]
-    public float fuerzaSalto = 5f;
+    [Header("Movimiento hacia delante")]
+    public float velocidadBase = 10f;
 
     [Header("Disparo")]
     public float alcanceDisparo = 50f;
@@ -32,15 +32,13 @@ public class PlayerController : MonoBehaviour
     public float recoilVelocidad = 10f;
 
     [Header("Animación recarga")]
-    public float velocidadRotacionRecarga = 720f; // grados por segundo
+    public float velocidadRotacionRecarga = 720f;
 
     private Vector2 inputMovimiento;
     private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
-    private bool estaEnSuelo = false;
 
     private Camera camara;
-    private Rigidbody rb;
 
     private Vector3 posicionInicialArma;
     private Quaternion rotacionInicialArma;
@@ -48,7 +46,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         camara = Camera.main;
-        rb = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -86,7 +83,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Recuperación del recoil (posición)
         if (arma != null && !recargando)
         {
             arma.localPosition = Vector3.Lerp(
@@ -103,16 +99,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnCollisionStay(Collision collision)
+    void Mover()
     {
-        if (collision.gameObject.CompareTag("Suelo"))
-            estaEnSuelo = true;
-    }
+        float velocidad = GameManager.Instance != null ? GameManager.Instance.GetCurrentSpeed() : velocidadBase;
 
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Suelo"))
-            estaEnSuelo = false;
+        Vector3 posicion = transform.position;
+
+        // Movimiento hacia delante
+        posicion += Vector3.forward * velocidad * Time.deltaTime;
+
+        
+        float direccion = 0f;
+
+        if (inputMovimiento.x > 0.1f) direccion = 1f;
+        else if (inputMovimiento.x < -0.1f) direccion = -1f;
+
+        posicion.x += direccion * velocidadLateral * Time.deltaTime;
+
+        posicion.x = Mathf.Clamp(posicion.x, -limiteX, limiteX);
+
+        transform.position = posicion;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -120,31 +126,10 @@ public class PlayerController : MonoBehaviour
         inputMovimiento = context.ReadValue<Vector2>();
     }
 
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (context.started && estaEnSuelo)
-        {
-            rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
-        }
-    }
-
     public void OnFire(InputAction.CallbackContext context)
     {
         if (context.started) estaDisparando = true;
         if (context.canceled) estaDisparando = false;
-    }
-
-    void Mover()
-    {
-        float velocidad = GameManager.Instance != null ? GameManager.Instance.GetCurrentSpeed() : 5f;
-
-        transform.Translate(Vector3.forward * velocidad * Time.deltaTime);
-
-        Vector3 movimiento = new Vector3(inputMovimiento.x * velocidadLateral * Time.deltaTime, 0f, 0f);
-        transform.Translate(movimiento);
-
-        float x = Mathf.Clamp(transform.position.x, -limiteX, limiteX);
-        transform.position = new Vector3(x, transform.position.y, transform.position.z);
     }
 
     void Disparar()
@@ -185,7 +170,6 @@ public class PlayerController : MonoBehaviour
         {
             tiempo += Time.deltaTime;
 
-            // 🔄 Rotación del arma sobre su eje
             if (arma != null)
             {
                 arma.Rotate(Vector3.forward * velocidadRotacionRecarga * Time.deltaTime);
@@ -196,7 +180,6 @@ public class PlayerController : MonoBehaviour
 
         balasActuales = balasPorCargador;
 
-        // Reset rotación al final
         if (arma != null)
             arma.localRotation = rotacionInicialArma;
 

@@ -25,7 +25,10 @@ public class EnemySpawner : MonoBehaviour
     // Los tres carriles del pasillo
     private float[] carriles = { -3f, 0f, 3f };
 
-    void Awake() { Instance = this; }
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -66,6 +69,7 @@ public class EnemySpawner : MonoBehaviour
         {
             float x = carrilesDisponibles[i];
             float z = jugador.position.z + distanciaSpawnDelante;
+
             Vector3 posicion = new Vector3(x, 0.5f, z);
 
             float tipoAleatorio = Random.value;
@@ -87,7 +91,7 @@ public class EnemySpawner : MonoBehaviour
             }
             else
             {
-                // Si no toca obstáculo todavía, spawea enemigo
+                // Si no toca obstáculo todavía, spawnea enemigo
                 SpawnEnemigo(posicion);
             }
         }
@@ -121,6 +125,7 @@ public class EnemySpawner : MonoBehaviour
         for (int i = lista.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
+
             float temp = lista[i];
             lista[i] = lista[j];
             lista[j] = temp;
