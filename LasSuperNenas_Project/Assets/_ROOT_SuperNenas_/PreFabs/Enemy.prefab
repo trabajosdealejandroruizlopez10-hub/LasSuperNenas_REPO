@@ -261,4 +261,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   health: 2
-  healthPickupPrefab: {fileID: 0}
+  healthPickupPrefab: {fileID: 919132149155446097, guid: 100f72381748bba46822cdbcc2fb7401, type: 3}
