@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public bool isGameOver = false;
     public float metersRun = 0f;
 
+    [Header("Tiempo")]
+    public float tiempoVivo = 0f;
+
     [Header("Vida")]
     public int maxHealth = 5;
     public int playerHealth;
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = false;
         metersRun = 0f;
+        tiempoVivo = 0f;
         playerHealth = maxHealth;
 
         Time.timeScale = 1f;
@@ -37,14 +41,21 @@ public class GameManager : MonoBehaviour
         if (panelGameOver != null)
             panelGameOver.SetActive(false);
 
-        ActualizarUI();
+        ActualizarUIVida();
     }
 
     void Update()
     {
         if (!isGameOver)
         {
-            metersRun += Time.deltaTime * GetCurrentSpeed();
+            float velocidad = GetCurrentSpeed();
+
+            metersRun += Time.deltaTime * velocidad;
+            tiempoVivo += Time.deltaTime;
+
+            // Actualizar temporizador
+            if (TimerUI.Instance != null)
+                TimerUI.Instance.ActualizarTiempo(tiempoVivo);
         }
     }
 
@@ -60,7 +71,7 @@ public class GameManager : MonoBehaviour
         playerHealth -= amount;
         playerHealth = Mathf.Clamp(playerHealth, 0, maxHealth);
 
-        ActualizarUI();
+        ActualizarUIVida();
 
         if (PlayerUI.Instance != null)
             PlayerUI.Instance.MostrarDaño();
@@ -78,10 +89,10 @@ public class GameManager : MonoBehaviour
         playerHealth += amount;
         playerHealth = Mathf.Clamp(playerHealth, 0, maxHealth);
 
-        ActualizarUI();
+        ActualizarUIVida();
     }
 
-    void ActualizarUI()
+    void ActualizarUIVida()
     {
         if (PlayerUI.Instance != null)
         {
@@ -94,9 +105,8 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
 
-        Debug.Log("GAME OVER - Metros: " + Mathf.FloorToInt(metersRun));
+        Debug.Log("GAME OVER - Tiempo: " + Mathf.FloorToInt(tiempoVivo) + "s");
 
-        
         if (panelGameOver != null)
             panelGameOver.SetActive(true);
 
