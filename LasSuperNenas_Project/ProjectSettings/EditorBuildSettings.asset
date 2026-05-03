@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_ROOT_SuperNenas_/Scenes/SCN_Alejandro.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: "Assets/_ROOT_SuperNenas_/Scenes/SCN_Mar\xEDa.unity"
+    guid: c0afd6dc17d606640ac84cc1dd304ac4
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: bf622fd214f261143a50bf659ee44dde, type: 3}
   m_UseUCBPForAssetBundles: 0
