@@ -240,6 +240,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5702427336006597654, guid: c558e61c4bee13449af1a7cdda2c3322, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8035280744224233084}
+    - targetCorrespondingSourceObject: {fileID: 5702427336006597654, guid: c558e61c4bee13449af1a7cdda2c3322, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3520604720046146764}
   m_SourcePrefab: {fileID: 100100000, guid: c558e61c4bee13449af1a7cdda2c3322, type: 3}
 --- !u!4 &704698484347475563 stripped
 Transform:
@@ -266,9 +269,23 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.9910567, y: 1.9910564, z: 1.9999998}
   m_Center: {x: 0, y: 0.00000008381903, z: 0.99999994}
+--- !u!114 &3520604720046146764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4714769115239320982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b04fe69e8cf2cda498358787c12d2a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstacleDamage
+  "da\xF1o": 1
+  destruirAlImpactar: 1
