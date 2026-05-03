@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour
             posicionInicialArma = arma.localPosition;
             rotacionInicialArma = arma.localRotation;
         }
+
+        // Inicializar UI de munición
+        if (AmmoUI.Instance != null)
+            AmmoUI.Instance.ActualizarMunicion(balasActuales, balasPorCargador);
     }
 
     void Update()
@@ -105,12 +109,9 @@ public class PlayerController : MonoBehaviour
 
         Vector3 posicion = transform.position;
 
-        // Movimiento hacia delante
         posicion += Vector3.forward * velocidad * Time.deltaTime;
 
-        
         float direccion = 0f;
-
         if (inputMovimiento.x > 0.1f) direccion = 1f;
         else if (inputMovimiento.x < -0.1f) direccion = -1f;
 
@@ -155,6 +156,10 @@ public class PlayerController : MonoBehaviour
             if (efectoImpacto != null)
                 Instantiate(efectoImpacto, impacto.point, Quaternion.identity);
         }
+
+        // Actualizar UI
+        if (AmmoUI.Instance != null)
+            AmmoUI.Instance.ActualizarMunicion(balasActuales, balasPorCargador);
     }
 
     IEnumerator Recargar()
@@ -171,9 +176,7 @@ public class PlayerController : MonoBehaviour
             tiempo += Time.deltaTime;
 
             if (arma != null)
-            {
                 arma.Rotate(Vector3.forward * velocidadRotacionRecarga * Time.deltaTime);
-            }
 
             yield return null;
         }
@@ -184,5 +187,9 @@ public class PlayerController : MonoBehaviour
             arma.localRotation = rotacionInicialArma;
 
         recargando = false;
+
+        // Actualizar UI
+        if (AmmoUI.Instance != null)
+            AmmoUI.Instance.ActualizarMunicion(balasActuales, balasPorCargador);
     }
 }
