@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_ROOT_SuperNenas_/Scenes/SCN_MainMenu.unity
+    guid: 889478a08e278884cb0ddc1a1cb092f1
+  - enabled: 1
     path: Assets/_ROOT_SuperNenas_/Scenes/SCN_Alejandro.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
