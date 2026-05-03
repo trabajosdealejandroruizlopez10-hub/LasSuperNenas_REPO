@@ -129,7 +129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 830d4c4c444c0114abe14fccce77226a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  velocidadHaciaDelante: 5
   velocidadLateral: 4
   limiteX: 4
   fuerzaSalto: 5
@@ -137,7 +136,7 @@ MonoBehaviour:
   cadenciaDisparo: 0.2
   capaEnemigos:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   efectoImpacto: {fileID: 0}
 --- !u!114 &2171539778821836890
 MonoBehaviour:

@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour
     public LayerMask capaEnemigos;
     public GameObject efectoImpacto;
 
+    [Header("Efectos de disparo")]
+    public AudioSource sonidoDisparo;
+    public Transform arma;
+    public float recoilFuerza = 0.1f;
+    public float recoilVelocidad = 10f;
+
     private Vector2 inputMovimiento;
     private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
@@ -24,6 +30,8 @@ public class PlayerController : MonoBehaviour
     private Camera camara;
     private Rigidbody rb;
 
+    private Vector3 posicionInicialArma;
+
     void Start()
     {
         camara = Camera.main;
@@ -31,6 +39,11 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (arma != null)
+        {
+            posicionInicialArma = arma.localPosition;
+        }
     }
 
     void Update()
@@ -43,6 +56,16 @@ public class PlayerController : MonoBehaviour
         {
             tiempoProximoDisparo = Time.time + cadenciaDisparo;
             Disparar();
+        }
+
+        // Volver arma a posición original (recoil recovery)
+        if (arma != null)
+        {
+            arma.localPosition = Vector3.Lerp(
+                arma.localPosition,
+                posicionInicialArma,
+                Time.deltaTime * recoilVelocidad
+            );
         }
     }
 
@@ -81,8 +104,10 @@ public class PlayerController : MonoBehaviour
     {
         float velocidad = GameManager.Instance.GetCurrentSpeed();
 
+        // Movimiento hacia delante automático
         transform.Translate(Vector3.forward * velocidad * Time.deltaTime);
 
+        // Movimiento lateral
         Vector3 movimiento = new Vector3(inputMovimiento.x * velocidadLateral * Time.deltaTime, 0f, 0f);
         transform.Translate(movimiento);
 
@@ -92,6 +117,18 @@ public class PlayerController : MonoBehaviour
 
     void Disparar()
     {
+        // Sonido
+        if (sonidoDisparo != null)
+        {
+            sonidoDisparo.Play();
+        }
+
+        // Recoil
+        if (arma != null)
+        {
+            arma.localPosition -= new Vector3(0f, 0f, recoilFuerza);
+        }
+
         Ray rayo = new Ray(camara.transform.position, camara.transform.forward);
         RaycastHit impacto;
 
