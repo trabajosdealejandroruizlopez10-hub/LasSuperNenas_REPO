@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     public float baseSpeed = 5f;
     public float speedIncreasePerMeter = 0.01f;
 
+    [Header("UI Game Over")]
+    public GameObject panelGameOver;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -30,6 +33,9 @@ public class GameManager : MonoBehaviour
         playerHealth = maxHealth;
 
         Time.timeScale = 1f;
+
+        if (panelGameOver != null)
+            panelGameOver.SetActive(false);
 
         ActualizarUI();
     }
@@ -89,6 +95,10 @@ public class GameManager : MonoBehaviour
         isGameOver = true;
 
         Debug.Log("GAME OVER - Metros: " + Mathf.FloorToInt(metersRun));
+
+        
+        if (panelGameOver != null)
+            panelGameOver.SetActive(true);
 
         Time.timeScale = 0f;
     }
