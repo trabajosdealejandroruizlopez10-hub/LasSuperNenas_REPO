@@ -260,5 +260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cabe9d905173c2498e8a8ea0da0c948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  health: 2
-  healthPickupPrefab: {fileID: 919132149155446097, guid: 100f72381748bba46822cdbcc2fb7401, type: 3}
+  vida: 2
+  vfxMuerte: {fileID: 5532222214182781158, guid: a253b19d4e37c5147b5d6011be796bc9, type: 3}
+  tiempoDestruirVFX: 2

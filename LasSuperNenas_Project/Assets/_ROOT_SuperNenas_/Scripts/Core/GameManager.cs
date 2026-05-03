@@ -8,33 +8,30 @@ public class GameManager : MonoBehaviour
     [Header("Estado del juego")]
     public bool isGameOver = false;
     public float metersRun = 0f;
-    public int playerHealth = 5;
 
-    [Header("Configuración de dificultad")]
+    [Header("Vida")]
+    public int maxHealth = 5;
+    public int playerHealth;
+
+    [Header("Velocidad")]
     public float baseSpeed = 5f;
     public float speedIncreasePerMeter = 0.01f;
 
     void Awake()
     {
-        // Singleton simple (sin persistencia entre escenas)
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     void Start()
     {
-        // Reset estado al iniciar escena
         isGameOver = false;
         metersRun = 0f;
-        playerHealth = 5;
+        playerHealth = maxHealth;
 
         Time.timeScale = 1f;
+
+        ActualizarUI();
     }
 
     void Update()
@@ -55,10 +52,15 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
 
         playerHealth -= amount;
+        playerHealth = Mathf.Clamp(playerHealth, 0, maxHealth);
+
+        ActualizarUI();
+
+        if (PlayerUI.Instance != null)
+            PlayerUI.Instance.MostrarDaño();
 
         if (playerHealth <= 0)
         {
-            playerHealth = 0;
             GameOver();
         }
     }
@@ -68,7 +70,18 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
 
         playerHealth += amount;
-        playerHealth = Mathf.Clamp(playerHealth, 0, 5);
+        playerHealth = Mathf.Clamp(playerHealth, 0, maxHealth);
+
+        ActualizarUI();
+    }
+
+    void ActualizarUI()
+    {
+        if (PlayerUI.Instance != null)
+        {
+            float vidaNormalizada = (float)playerHealth / maxHealth;
+            PlayerUI.Instance.ActualizarVida(vidaNormalizada);
+        }
     }
 
     public void GameOver()
@@ -76,25 +89,6 @@ public class GameManager : MonoBehaviour
         isGameOver = true;
 
         Debug.Log("GAME OVER - Metros: " + Mathf.FloorToInt(metersRun));
-
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.MostrarGameOver();
-        }
-
-        Time.timeScale = 0f;
-    }
-
-    public void WinGame()
-    {
-        isGameOver = true;
-
-        Debug.Log("YOU WIN");
-
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.MostrarVictoria();
-        }
 
         Time.timeScale = 0f;
     }

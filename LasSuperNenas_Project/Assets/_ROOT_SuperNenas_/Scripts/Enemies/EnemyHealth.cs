@@ -1,35 +1,42 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int health = 2;
-    public GameObject healthPickupPrefab;
+    [Header("Vida")]
+    public int vida = 2;
 
-    public void TakeDamage(int damage)
+    [Header("VFX al morir")]
+    public GameObject vfxMuerte;
+    public float tiempoDestruirVFX = 2f;
+
+    public void TakeDamage(int daño)
     {
-        health -= damage;
+        vida -= daño;
 
-        if (health <= 0)
+        if (vida <= 0)
         {
-            Die();
+            Morir();
         }
     }
 
-    void Die()
+    void Morir()
     {
-        if (healthPickupPrefab != null)
+        
+        if (vfxMuerte != null)
         {
-            Instantiate(healthPickupPrefab, transform.position, Quaternion.identity);
+            GameObject vfx = Instantiate(vfxMuerte, transform.position, Quaternion.identity);
+
+            
+            Destroy(vfx, tiempoDestruirVFX);
         }
 
+        
+        if (EnemySpawner.Instance != null)
+        {
+            EnemySpawner.Instance.RegistrarMuerte(gameObject);
+        }
+
+        
         Destroy(gameObject);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            GameManager.Instance.TakeDamage(1);
-        }
     }
 }
