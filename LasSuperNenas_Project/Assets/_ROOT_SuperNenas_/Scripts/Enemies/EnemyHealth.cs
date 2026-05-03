@@ -2,18 +2,34 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int vida = 2;
+    public int health = 2;
+    public GameObject healthPickupPrefab;
 
-    public void RecibirDaño(int cantidad)
+    public void TakeDamage(int damage)
     {
-        vida -= cantidad;
-        if (vida <= 0) Morir();
+        health -= damage;
+
+        if (health <= 0)
+        {
+            Die();
+        }
     }
 
-    void Morir()
+    void Die()
     {
-        if (EnemySpawner.Instance != null)
-            EnemySpawner.Instance.RegistrarMuerte(this.gameObject);
+        if (healthPickupPrefab != null)
+        {
+            Instantiate(healthPickupPrefab, transform.position, Quaternion.identity);
+        }
+
         Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            GameManager.Instance.TakeDamage(1);
+        }
     }
 }
