@@ -8,12 +8,19 @@ public class CameraLook : MonoBehaviour
     [Header("Referencias")]
     public Transform playerBody;
 
+    [Header("Límites")]
+    public float limiteVertical = 80f;
+    public float limiteHorizontal = 60f;
+
     private float rotacionX = 0f;
+    private float rotacionY = 0f;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        rotacionY = playerBody.eulerAngles.y;
     }
 
     void Update()
@@ -23,11 +30,14 @@ public class CameraLook : MonoBehaviour
 
         // Rotación vertical (arriba/abajo)
         rotacionX -= mouseY;
-        rotacionX = Mathf.Clamp(rotacionX, -80f, 80f);
+        rotacionX = Mathf.Clamp(rotacionX, -limiteVertical, limiteVertical);
 
+        // Rotación horizontal (izquierda/derecha con límite)
+        rotacionY += mouseX;
+        rotacionY = Mathf.Clamp(rotacionY, -limiteHorizontal, limiteHorizontal);
+
+        // Aplicar rotaciones
         transform.localRotation = Quaternion.Euler(rotacionX, 0f, 0f);
-
-        // Rotación horizontal (izquierda/derecha)
-        playerBody.Rotate(Vector3.up * mouseX);
+        playerBody.rotation = Quaternion.Euler(0f, rotacionY, 0f);
     }
 }
