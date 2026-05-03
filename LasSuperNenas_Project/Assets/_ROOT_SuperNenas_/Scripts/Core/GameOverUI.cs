@@ -1,24 +1,12 @@
 using UnityEngine;
-using TMPro;
 
-public class TimerUI : MonoBehaviour
+public class GameOverUI : MonoBehaviour
 {
-    public static TimerUI Instance;
-
-    [Header("Texto del temporizador")]
-    public TextMeshProUGUI textoTiempo;
-
-    void Awake()
+    public void Retry()
     {
-        Instance = this;
-    }
-
-    public void ActualizarTiempo(float tiempo)
-    {
-        if (textoTiempo != null)
+        if (GameManager.Instance != null)
         {
-            int segundos = Mathf.FloorToInt(tiempo);
-            textoTiempo.text = segundos + "s";
+            GameManager.Instance.RestartGame();
         }
     }
 }
