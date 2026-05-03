@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,23 @@ public class PlayerController : MonoBehaviour
     public LayerMask capaEnemigos;
     public GameObject efectoImpacto;
 
+    [Header("Munición")]
+    public int balasPorCargador = 10;
+    public float tiempoRecarga = 1.5f;
+
+    private int balasActuales;
+    private bool recargando = false;
+
+    [Header("Efectos de disparo")]
+    public AudioSource sonidoDisparo;
+    public AudioSource sonidoRecarga;
+    public Transform arma;
+    public float recoilFuerza = 0.1f;
+    public float recoilVelocidad = 10f;
+
+    [Header("Animación recarga")]
+    public float velocidadRotacionRecarga = 720f; // grados por segundo
+
     private Vector2 inputMovimiento;
     private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
@@ -24,6 +42,9 @@ public class PlayerController : MonoBehaviour
     private Camera camara;
     private Rigidbody rb;
 
+    private Vector3 posicionInicialArma;
+    private Quaternion rotacionInicialArma;
+
     void Start()
     {
         camara = Camera.main;
@@ -31,18 +52,54 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        balasActuales = balasPorCargador;
+
+        if (arma != null)
+        {
+            posicionInicialArma = arma.localPosition;
+            rotacionInicialArma = arma.localRotation;
+        }
     }
 
     void Update()
     {
-        if (GameManager.Instance == null || GameManager.Instance.isGameOver) return;
+        if (GameManager.Instance != null && GameManager.Instance.isGameOver) return;
 
         Mover();
 
-        if (estaDisparando && Time.time >= tiempoProximoDisparo)
+        if (Keyboard.current.rKey.wasPressedThisFrame && !recargando && balasActuales < balasPorCargador)
         {
-            tiempoProximoDisparo = Time.time + cadenciaDisparo;
-            Disparar();
+            StartCoroutine(Recargar());
+        }
+
+        if (estaDisparando && Time.time >= tiempoProximoDisparo && !recargando)
+        {
+            if (balasActuales > 0)
+            {
+                tiempoProximoDisparo = Time.time + cadenciaDisparo;
+                Disparar();
+            }
+            else
+            {
+                StartCoroutine(Recargar());
+            }
+        }
+
+        // Recuperación del recoil (posición)
+        if (arma != null && !recargando)
+        {
+            arma.localPosition = Vector3.Lerp(
+                arma.localPosition,
+                posicionInicialArma,
+                Time.deltaTime * recoilVelocidad
+            );
+
+            arma.localRotation = Quaternion.Lerp(
+                arma.localRotation,
+                rotacionInicialArma,
+                Time.deltaTime * recoilVelocidad
+            );
         }
     }
 
@@ -79,7 +136,7 @@ public class PlayerController : MonoBehaviour
 
     void Mover()
     {
-        float velocidad = GameManager.Instance.GetCurrentSpeed();
+        float velocidad = GameManager.Instance != null ? GameManager.Instance.GetCurrentSpeed() : 5f;
 
         transform.Translate(Vector3.forward * velocidad * Time.deltaTime);
 
@@ -92,6 +149,14 @@ public class PlayerController : MonoBehaviour
 
     void Disparar()
     {
+        balasActuales--;
+
+        if (sonidoDisparo != null)
+            sonidoDisparo.Play();
+
+        if (arma != null)
+            arma.localPosition -= new Vector3(0f, 0f, recoilFuerza);
+
         Ray rayo = new Ray(camara.transform.position, camara.transform.forward);
         RaycastHit impacto;
 
@@ -100,14 +165,41 @@ public class PlayerController : MonoBehaviour
             EnemyHealth enemigo = impacto.collider.GetComponent<EnemyHealth>();
 
             if (enemigo != null)
-            {
                 enemigo.TakeDamage(1);
-            }
 
             if (efectoImpacto != null)
-            {
                 Instantiate(efectoImpacto, impacto.point, Quaternion.identity);
-            }
         }
+    }
+
+    IEnumerator Recargar()
+    {
+        recargando = true;
+
+        if (sonidoRecarga != null)
+            sonidoRecarga.Play();
+
+        float tiempo = 0f;
+
+        while (tiempo < tiempoRecarga)
+        {
+            tiempo += Time.deltaTime;
+
+            // 🔄 Rotación del arma sobre su eje
+            if (arma != null)
+            {
+                arma.Rotate(Vector3.forward * velocidadRotacionRecarga * Time.deltaTime);
+            }
+
+            yield return null;
+        }
+
+        balasActuales = balasPorCargador;
+
+        // Reset rotación al final
+        if (arma != null)
+            arma.localRotation = rotacionInicialArma;
+
+        recargando = false;
     }
 }
