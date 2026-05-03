@@ -30,8 +30,6 @@ public class PlayerController : MonoBehaviour
     public Transform arma;
     public float recoilFuerza = 0.1f;
     public float recoilVelocidad = 10f;
-
-    [Header("Animación recarga")]
     public float velocidadRotacionRecarga = 720f;
 
     private Vector2 inputMovimiento;
@@ -58,14 +56,14 @@ public class PlayerController : MonoBehaviour
             rotacionInicialArma = arma.localRotation;
         }
 
-        // Inicializar UI de munición
         if (AmmoUI.Instance != null)
             AmmoUI.Instance.ActualizarMunicion(balasActuales, balasPorCargador);
     }
 
     void Update()
     {
-        if (GameManager.Instance != null && GameManager.Instance.isGameOver) return;
+        if (GameManager.Instance != null && GameManager.Instance.isGameOver)
+            return;
 
         Mover();
 
@@ -157,7 +155,6 @@ public class PlayerController : MonoBehaviour
                 Instantiate(efectoImpacto, impacto.point, Quaternion.identity);
         }
 
-        // Actualizar UI
         if (AmmoUI.Instance != null)
             AmmoUI.Instance.ActualizarMunicion(balasActuales, balasPorCargador);
     }
@@ -188,7 +185,6 @@ public class PlayerController : MonoBehaviour
 
         recargando = false;
 
-        // Actualizar UI
         if (AmmoUI.Instance != null)
             AmmoUI.Instance.ActualizarMunicion(balasActuales, balasPorCargador);
     }

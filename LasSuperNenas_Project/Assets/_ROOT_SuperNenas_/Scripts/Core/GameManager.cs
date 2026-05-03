@@ -8,8 +8,6 @@ public class GameManager : MonoBehaviour
     [Header("Estado del juego")]
     public bool isGameOver = false;
     public float metersRun = 0f;
-
-    [Header("Tiempo")]
     public float tiempoVivo = 0f;
 
     [Header("Vida")]
@@ -38,10 +36,16 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1f;
 
+        
         if (panelGameOver != null)
             panelGameOver.SetActive(false);
 
+       
         ActualizarUIVida();
+
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
@@ -53,7 +57,7 @@ public class GameManager : MonoBehaviour
             metersRun += Time.deltaTime * velocidad;
             tiempoVivo += Time.deltaTime;
 
-            // Actualizar temporizador
+            
             if (TimerUI.Instance != null)
                 TimerUI.Instance.ActualizarTiempo(tiempoVivo);
         }
@@ -73,6 +77,7 @@ public class GameManager : MonoBehaviour
 
         ActualizarUIVida();
 
+        
         if (PlayerUI.Instance != null)
             PlayerUI.Instance.MostrarDaño();
 
@@ -107,10 +112,13 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("GAME OVER - Tiempo: " + Mathf.FloorToInt(tiempoVivo) + "s");
 
+        
         if (panelGameOver != null)
             panelGameOver.SetActive(true);
 
-        Time.timeScale = 0f;
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void RestartGame()
