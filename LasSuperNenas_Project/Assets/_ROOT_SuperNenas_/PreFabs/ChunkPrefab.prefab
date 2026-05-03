@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 8022871296273830628}
   - component: {fileID: 2891407621867201408}
   - component: {fileID: 8284681205530883680}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ChunkPrefab
-  m_TagString: Untagged
+  m_TagString: Suelo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

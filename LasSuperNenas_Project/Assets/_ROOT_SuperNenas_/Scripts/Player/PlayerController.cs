@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,20 @@ public class PlayerController : MonoBehaviour
     public LayerMask capaEnemigos;
     public GameObject efectoImpacto;
 
+    [Header("Munición")]
+    public int balasPorCargador = 10;
+    public float tiempoRecarga = 1.5f;
+
+    private int balasActuales;
+    private bool recargando = false;
+
+    [Header("Efectos de disparo")]
+    public AudioSource sonidoDisparo;
+    public AudioSource sonidoRecarga;
+    public Transform arma;
+    public float recoilFuerza = 0.1f;
+    public float recoilVelocidad = 10f;
+
     private Vector2 inputMovimiento;
     private bool estaDisparando = false;
     private float tiempoProximoDisparo = 0f;
@@ -24,6 +39,8 @@ public class PlayerController : MonoBehaviour
     private Camera camara;
     private Rigidbody rb;
 
+    private Vector3 posicionInicialArma;
+
     void Start()
     {
         camara = Camera.main;
@@ -31,6 +48,11 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        balasActuales = balasPorCargador;
+
+        if (arma != null)
+            posicionInicialArma = arma.localPosition;
     }
 
     void Update()
@@ -39,10 +61,33 @@ public class PlayerController : MonoBehaviour
 
         Mover();
 
-        if (estaDisparando && Time.time >= tiempoProximoDisparo)
+        // Recarga manual (tecla R)
+        if (Keyboard.current.rKey.wasPressedThisFrame && !recargando && balasActuales < balasPorCargador)
         {
-            tiempoProximoDisparo = Time.time + cadenciaDisparo;
-            Disparar();
+            StartCoroutine(Recargar());
+        }
+
+        if (estaDisparando && Time.time >= tiempoProximoDisparo && !recargando)
+        {
+            if (balasActuales > 0)
+            {
+                tiempoProximoDisparo = Time.time + cadenciaDisparo;
+                Disparar();
+            }
+            else
+            {
+                StartCoroutine(Recargar());
+            }
+        }
+
+        // Recuperación del recoil
+        if (arma != null)
+        {
+            arma.localPosition = Vector3.Lerp(
+                arma.localPosition,
+                posicionInicialArma,
+                Time.deltaTime * recoilVelocidad
+            );
         }
     }
 
@@ -92,6 +137,14 @@ public class PlayerController : MonoBehaviour
 
     void Disparar()
     {
+        balasActuales--;
+
+        if (sonidoDisparo != null)
+            sonidoDisparo.Play();
+
+        if (arma != null)
+            arma.localPosition -= new Vector3(0f, 0f, recoilFuerza);
+
         Ray rayo = new Ray(camara.transform.position, camara.transform.forward);
         RaycastHit impacto;
 
@@ -100,14 +153,23 @@ public class PlayerController : MonoBehaviour
             EnemyHealth enemigo = impacto.collider.GetComponent<EnemyHealth>();
 
             if (enemigo != null)
-            {
                 enemigo.TakeDamage(1);
-            }
 
             if (efectoImpacto != null)
-            {
                 Instantiate(efectoImpacto, impacto.point, Quaternion.identity);
-            }
         }
+    }
+
+    IEnumerator Recargar()
+    {
+        recargando = true;
+
+        if (sonidoRecarga != null)
+            sonidoRecarga.Play();
+
+        yield return new WaitForSeconds(tiempoRecarga);
+
+        balasActuales = balasPorCargador;
+        recargando = false;
     }
 }
