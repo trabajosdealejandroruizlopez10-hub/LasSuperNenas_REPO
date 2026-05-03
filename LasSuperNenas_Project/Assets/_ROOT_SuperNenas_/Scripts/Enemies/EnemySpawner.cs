@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour
     private List<GameObject> enemigosVivos = new List<GameObject>();
     private Transform jugador;
 
-    // Los tres carriles del pasillo
+    
     private float[] carriles = { -3f, 0f, 3f };
 
     void Awake()
@@ -42,7 +42,6 @@ public class EnemySpawner : MonoBehaviour
         {
             float metros = GameManager.Instance.metersRun;
 
-            // Calcula el tiempo entre oleadas según metros, con tope
             float progreso = Mathf.Clamp01(metros / metrosTope);
             float tiempoEspera = Mathf.Lerp(tiempoBaseEntreOleadas, tiempoMinimoEntreOleadas, progreso);
 
@@ -55,16 +54,12 @@ public class EnemySpawner : MonoBehaviour
     void SpawnOleada()
     {
         float metros = GameManager.Instance.metersRun;
-        float progreso = Mathf.Clamp01(metros / metrosTope);
 
-        // Cuántos carriles ocupar (nunca los 3 a la vez)
-        int carrilesOcupados = metros < 100f ? 1 : (metros < 300f ? 2 : 2);
+        int carrilesOcupados = metros < 100f ? 1 : 2;
 
-        // Mezcla los carriles aleatoriamente
         List<float> carrilesDisponibles = new List<float>(carriles);
         MezclarLista(carrilesDisponibles);
 
-        // Elige qué tipo de objeto spawnear según progreso
         for (int i = 0; i < carrilesOcupados; i++)
         {
             float x = carrilesDisponibles[i];
@@ -76,22 +71,18 @@ public class EnemySpawner : MonoBehaviour
 
             if (tipoAleatorio < 0.5f)
             {
-                // Enemigo — aparece desde el principio
                 SpawnEnemigo(posicion);
             }
             else if (tipoAleatorio < 0.75f && metros > 50f)
             {
-                // Trampa — aparece a partir de 50 metros
                 SpawnTrampa(posicion);
             }
             else if (metros > 150f)
             {
-                // Obstáculo — aparece a partir de 150 metros
                 SpawnObstaculo(posicion);
             }
             else
             {
-                // Si no toca obstáculo todavía, spawnea enemigo
                 SpawnEnemigo(posicion);
             }
         }
@@ -99,19 +90,20 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemigo(Vector3 posicion)
     {
-        GameObject enemigo = Instantiate(prefabEnemigo, posicion, Quaternion.identity);
+        
+        GameObject enemigo = Instantiate(prefabEnemigo, posicion, Quaternion.Euler(0f, 180f, 0f));
         enemigosVivos.Add(enemigo);
     }
 
     void SpawnTrampa(Vector3 posicion)
     {
-        posicion.y = 0.01f; // Ras del suelo
+        posicion.y = 0.01f;
         Instantiate(prefabTrampa, posicion, Quaternion.identity);
     }
 
     void SpawnObstaculo(Vector3 posicion)
     {
-        posicion.y = 1.5f; // Centrado verticalmente
+        posicion.y = 1.5f;
         Instantiate(prefabObstaculo, posicion, Quaternion.identity);
     }
 
