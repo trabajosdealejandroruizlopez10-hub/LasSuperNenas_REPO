@@ -1,0 +1,14 @@
+Goku 3D Animated
+30 fps
+Reference Animation: 
+A = Action x 3
+D = Dance x 4
+Idle = Idle x 3
+KHH = Kame Hame Ha x 1
+M = Magic x 11
+Run = Run x1
+Walk = Walk x 1 
+
+Total Animations = 24 
+
+----------------------------By Estudio Masluz-----------------------------------------
